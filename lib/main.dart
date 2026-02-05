@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart'; // L'import fonctionnera car le fichier existe maintenant
 import 'package:get/get.dart';
 import 'routes/app_pages.dart';
-void main() {
+import 'package:intl/date_symbol_data_local.dart'; 
+void main() async{
+  await initializeDateFormatting('fr_FR', null);
   runApp(const NafaGazApp());
 }
 

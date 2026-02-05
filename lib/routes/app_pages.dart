@@ -8,14 +8,14 @@ import '../screens/home/bindings/dashboardBindings.dart';
 import '../screens/otpsiginup/otp_binding.dart';
 import '../screens/otpsiginup/otp_view.dart';
 import '../screens/home/views/dashboard_view.dart';
-import '../screens/order/bindings/catalog_bindings.dart';
-import '../screens/order/views/catalog_view.dart';
-import '../screens/order/checkout/bindings/checkout_binding.dart';
-import '../screens/order/checkout/views/checkout_view.dart';
+import '../screens/order/catalog/catalog_bindings.dart';
+import '../screens/order/catalog/catalog_view.dart';
+import '../screens/order/checkout/checkout_binding.dart';
+import '../screens/order/checkout/checkout_view.dart';
 import '../main_layout_binding.dart';
 import '../main_layout.dart';
-import '../screens/history/activity_detail/bindings/activity_detail_binding.dart';
-import '../screens/history/activity_detail/views/activity_detail_view.dart';
+import '../screens/history/activity_detail/activity_detail_binding.dart';
+import '../screens/history/activity_detail/activity_detail_view.dart';
 import '../screens/history/activity/update_activity/update_activity_binding.dart';
 import '../screens/history/activity/update_activity/update_activity_view.dart';
 import '../screens/notifications/notification_view.dart';
@@ -26,6 +26,8 @@ import '../screens/profile/addresslist/address_binding.dart';
 import '../screens/profile/addresslist/address_list_view.dart';
 import '../screens/profile/edit_profile/edit_profil_binding.dart';
 import '../screens/profile/edit_profile/edit_profil_view.dart';
+import '../screens/order/detail_produit/detail_produit_binding.dart';
+import '../screens/order/detail_produit/detail_produit_view.dart';
 
 class AppPages {
   static const INITIAL = Routes.LOGIN;
@@ -44,6 +46,7 @@ class AppPages {
         GetPage(name: Routes.ADDRESSLIST,page: ()=> const AddressListView(),binding: AddressListBinding()),
         GetPage(name: Routes.ADDADDRESS,page: ()=> const AddAddressView(),binding: AddAddressBinding()),
         GetPage(name: Routes.EDITPROFILE,page: ()=> const EditProfileView(),binding: EditProfileBinding()),
+      GetPage(name: Routes.DETAILPRODUIT, page: () => const ProduitDetailView(), binding:ProduitDetailBinding()),
 
 
 

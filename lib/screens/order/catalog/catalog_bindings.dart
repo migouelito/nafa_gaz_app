@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/catalog_controllers.dart';
+import 'catalog_controller.dart';
 
 class CatalogBinding extends Bindings {
   @override

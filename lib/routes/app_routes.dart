@@ -13,6 +13,7 @@ abstract class Routes {
   static const ADDADDRESS='/address/add';
   static const ADDRESSLIST='/address/list';
   static const EDITPROFILE='/profil/edit';
+  static const DETAILPRODUIT='/detailproduit';
 
 
 }

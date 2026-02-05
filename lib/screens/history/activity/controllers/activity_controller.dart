@@ -17,7 +17,6 @@ Future<void> fetchOrders() async {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     try {
       LoadingModal.show();
-      print("=========================");
       futureCommandes.value =  _apiService.fetchCommandes();
     } finally {
       LoadingModal.hide();

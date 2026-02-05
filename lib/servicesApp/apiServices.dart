@@ -307,6 +307,36 @@ Future<List<Map<String, dynamic>>?> getProduits() async {
 }
 
 
+// ======================== Détail d'un produit ========================
+Future<Map<String, dynamic>?> getProduitDetail(String id) async {
+  final token = await getAccessToken();
+  if (token == null) return null;
+
+  try {
+    final uri = Uri.parse('$baseUrl/api/produit/$id/retreive/');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      print("Détails du produit récupérés : $data");
+      return data;
+    } else {
+      print('Erreur serveur : ${response.statusCode} => ${response.body}');
+      return null;
+    }
+  } catch (e) {
+    print('Erreur lors de la récupération du détail produit : $e');
+    return null;
+  }
+}
+
 Future<List<Map<String, dynamic>>?> getmouvements() async {
   final token = await getAccessToken();
   if (token == null) return null;
@@ -572,6 +602,7 @@ Future<Map<String, dynamic>?> fetchCommandeDetail(String idCommande) async {
 
     if (response.statusCode == 200) {
       // On décode l'objet unique (Map)
+      print("cool details comande");
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
       print('Erreur serveur : ${response.statusCode}');

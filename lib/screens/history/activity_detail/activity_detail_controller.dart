@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../../../servicesApp/apiServices.dart';
-import '../../../../loading/loading.dart';
-import '../../../../alerte/alerte.dart';
-import '../../../../appColors/appColors.dart';
+import '../../../servicesApp/apiServices.dart';
+import '../../../loading/loading.dart';
+import '../../../alerte/alerte.dart';
+import '../../../appColors/appColors.dart';
 import 'package:flutter/material.dart';
-import '../../../../screens/history/activity/controllers/activity_controller.dart';
+import '../activity/controllers/activity_controller.dart';
 
 class ActivityDetailController extends GetxController {
   final ApiService apiService = ApiService();
@@ -27,6 +27,7 @@ class ActivityDetailController extends GetxController {
     try {
       isLoading.value = true;
       final response = await apiService.fetchCommandeDetail(order['id']);
+      print("=======================detail$response");
       if (response != null) {
         order.value = response;
       }
