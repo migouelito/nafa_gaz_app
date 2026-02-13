@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart'; // N'oublie pas l'import
+import 'package:phosphor_flutter/phosphor_flutter.dart'; 
 import '../../../../appColors/appColors.dart';
 import 'update_activity_controller.dart';
 import '../../../../loading/loading.dart';
@@ -11,18 +11,14 @@ class UpdateActivityView extends GetView<UpdateActivityController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FD), // Un gris très léger pour le fond
+      backgroundColor: const Color(0xFFF8F9FD), 
       appBar: AppBar(
         title: const Text("Options de modification", 
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: -0.5)),
-        centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => Get.back(),
-        ),
+       
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -31,7 +27,6 @@ class UpdateActivityView extends GetView<UpdateActivityController> {
 
         return Stack(
           children: [
-            // Décoration de fond (Optionnel : petit cercle de couleur flou)
             Positioned(
               top: -50, right: -50,
               child: CircleAvatar(radius: 100, backgroundColor: AppColors.generalColor.withOpacity(0.03)),
@@ -78,7 +73,7 @@ class UpdateActivityView extends GetView<UpdateActivityController> {
                     title: "Changer d'article",
                     subtitle: "Remplacer par un autre modèle",
                     icon: PhosphorIcons.shoppingCart(PhosphorIconsStyle.duotone),
-                    color: Colors.blue,
+                    color: AppColors.generalColor,
                     onTap: controller.chooseChangeBottle,
                   ),
 

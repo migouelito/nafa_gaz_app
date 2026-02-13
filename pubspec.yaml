@@ -48,6 +48,7 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   jwt_decoder: ^2.0.1
   phosphor_flutter: ^2.1.0
+  google_fonts: ^8.0.1
 
 dev_dependencies:
   flutter_test:
@@ -75,3 +76,7 @@ flutter:
     - assets/images/error.png
     - assets/images/succes.png
     - assets/images/logout.png
+    - assets/images/pub1.jpg
+    - assets/images/pub2.jpg
+    - assets/images/pub3.jpg
+    - assets/images/pub4.jpg

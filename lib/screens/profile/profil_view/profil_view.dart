@@ -13,8 +13,10 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Mon Profil", style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.white,
+        title: const Text("Mon Profil", style:  TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(

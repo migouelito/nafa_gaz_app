@@ -21,7 +21,6 @@ class ActivityScreen extends GetView<ActivityController> {
             "Mes Commandes",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
           ),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
@@ -42,7 +41,7 @@ class ActivityScreen extends GetView<ActivityController> {
         // --- BOUTON COMMANDER ---
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => Get.toNamed(Routes.CALALOG),
-          backgroundColor: const Color(0xFF003317),
+          backgroundColor: AppColors.generalColor,
           elevation: 4,
           icon: Icon(PhosphorIcons.shoppingCart(PhosphorIconsStyle.fill), color: Colors.white, size: 20),
           label: const Text("Commander", 
@@ -63,7 +62,6 @@ class ActivityScreen extends GetView<ActivityController> {
             // --- RÉCUPÉRATION ET TRI ---
             List<dynamic> allOrders = List.from(snapshot.data!);
             
-            // Tri du plus récent au plus ancien
             allOrders.sort((a, b) {
               DateTime dateA = DateTime.tryParse(a['created'] ?? "") ?? DateTime(2000);
               DateTime dateB = DateTime.tryParse(b['created'] ?? "") ?? DateTime(2000);
@@ -183,8 +181,6 @@ class ActivityScreen extends GetView<ActivityController> {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              Icon(PhosphorIcons.calendarCheck(), size: 14, color: Colors.grey),
-                              const SizedBox(width: 4),
                               Text(formattedDate, style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w500)),
                             ],
                           ),

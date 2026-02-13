@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:nafa_gaz_app/appColors/appColors.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../servicesApp/urlBase.dart';
 import '../../../loading/loading.dart';
 import 'detail_produit_controller.dart';
+import '../../../routes/app_routes.dart';
 
 class ProduitDetailView extends GetView<ProduitDetailController> {
   const ProduitDetailView({super.key});
@@ -34,8 +36,6 @@ class ProduitDetailView extends GetView<ProduitDetailController> {
           return const Center(child: Text("Produit introuvable"));
         }
 
-        // SOLUTION : Utiliser .value pour convertir RxMap en Map<dynamic, dynamic>
-        // Puis caster en Map<String, dynamic> pour éviter les erreurs de type
         final Map<String, dynamic> item = Map<String, dynamic>.from(controller.item.value);
         
         // Extraction selon ton JSON : 'tarif' au singulier
@@ -191,14 +191,16 @@ class ProduitDetailView extends GetView<ProduitDetailController> {
     margin: const EdgeInsets.only(bottom: 10),
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.redAccent, 
+        backgroundColor: AppColors.generalColor, 
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
       ),
-      onPressed: () => _showAvarieOptions(),
-      icon: Icon(PhosphorIcons.warningCircle(PhosphorIconsStyle.bold), color: Colors.white, size: 20),
-      label: const Text("SIGNALER UNE AVARIE", 
-             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13)),
+      onPressed: () =>Get.toNamed(Routes.CHECKOUT, arguments: {
+                  'productIds': [controller.item['id'].toString()], 
+                }),//_showAvarieOptions(),
+      icon: Icon(PhosphorIcons.shoppingCart(PhosphorIconsStyle.bold), color: Colors.white, size: 20),
+      label: const Text("Commander", 
+      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)),
     ),
   );
 

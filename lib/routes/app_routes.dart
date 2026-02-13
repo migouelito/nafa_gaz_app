@@ -2,6 +2,7 @@ abstract class Routes {
   static const LOGIN = '/login';
   static const SIGNINUP='/siginup';
   static const SIGNINOTP='/siginup/otp';
+  static const PASSWORDFORGET='/passwordforget';
   static const DRIVER_SAFETY = '/driver/safety';
   static const HOME = '/home';
   static const HOMEMAIN='/homemain';
@@ -14,6 +15,11 @@ abstract class Routes {
   static const ADDRESSLIST='/address/list';
   static const EDITPROFILE='/profil/edit';
   static const DETAILPRODUIT='/detailproduit';
+  static const BUY='/activity/buy';
+  static const RECHARGE='/activity/recharge';
+  static const CHANGE='/activity/echange';
+  static const ORDERVALIDATION='/activity/ordervalidation';
+
 
 
 }

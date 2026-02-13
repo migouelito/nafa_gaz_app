@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 const SizedBox(width: 15),
                 RichText(
-                  text: const TextSpan(
+                  text:TextSpan(
                     style: TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.w900,
@@ -96,11 +96,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     children: [
                       TextSpan(
                         text: "NAFA",
-                        style: TextStyle(color: Color(0xFF003317)),
+                        style: TextStyle(color: AppColors.generalColor),
                       ),
                       TextSpan(
                         text: "GAZ",
-                        style: TextStyle(color: Color(0xFFFF5722)),
+                        style: TextStyle(color: AppColors.Orange),
                       ),
                     ],
                   ),

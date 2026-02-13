@@ -5,6 +5,7 @@ import 'activity_detail_controller.dart';
 import '../../../appColors/appColors.dart';
 import '../../../questionModal/questionModal.dart';
 import '../../../routes/app_routes.dart';
+import '../../../servicesApp/urlBase.dart';
 
 class ActivityDetailView extends GetView<ActivityDetailController> {
   const ActivityDetailView({super.key});
@@ -26,78 +27,134 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildStatusHeader(),
-              const SizedBox(height: 20),
-              
-              _buildSectionHeader("Articles commandés", PhosphorIcons.package()),
-              Expanded(
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: controller.items.length,
-                  itemBuilder: (context, index) => _buildProductItemCard(controller.items[index]),
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatusHeader(),
+                    const SizedBox(height: 25),
+                    
+                    // --- LISTE DES ARTICLES EN FORMAT DROPDOWN (EXPANSION) ---
+                    _buildSectionHeader("Contenu de la commande", PhosphorIcons.package()),
+                    _buildProductsExpansionTile(),
+                    
+                    const SizedBox(height: 20),
+                    _buildSectionHeader("Récapitulatif financier", PhosphorIcons.creditCard()),
+                    _buildFinanceCard(),
+
+                    const SizedBox(height: 20),
+                    _buildSectionHeader("Informations de livraison", PhosphorIcons.mapPin()),
+                    _buildDeliveryCard(),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
-              
-              const SizedBox(height: 20),
-              _buildSectionHeader("Récapitulatif financier", PhosphorIcons.creditCard()),
-              _buildFinanceCard(),
-
-              const SizedBox(height: 20),
-              _buildSectionHeader("Informations de livraison", PhosphorIcons.mapPin()),
-              _buildDeliveryCard(),
-              const SizedBox(height: 10),
-            ],
-          ),
-        );
-      }),
-
-      // BOUTONS FLOTTANTS (Style Mouvement)
-      floatingActionButton: Obx(() {
-        if (!controller.canModify) return const SizedBox.shrink();
-        
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            // BOUTON ANNULER (Rouge)
-            FloatingActionButton(
-              heroTag: "fabCancel",
-              mini: true,
-              backgroundColor: Colors.red,
-              onPressed: () {
-                DialogLogout.show(
-                  title: "Annuler ?",
-                  message: "Voulez-vous vraiment annuler cette commande ?",
-                  imagePath: "assets/images/error.png",
-                  color: Colors.red,
-                  onConfirm: () => controller.cancelCommande(),
-                );
-              },
-              child: Icon(PhosphorIcons.xCircle(), color: Colors.white, size: 20),
             ),
-            const SizedBox(height: 12),
-            // BOUTON MODIFIER (Bleu)
-            FloatingActionButton(
-              heroTag: "fabEdit",
-              mini: true,
-              backgroundColor: AppColors.generalColor,
-              onPressed: () {
-                final orderId = controller.order['id'];
-                Get.toNamed(Routes.ACTIVITYUPDATE, arguments: orderId);
-              },
-              child: Icon(PhosphorIcons.pencilSimple(), color: Colors.white, size: 20),
-            ),
+            
+            // --- BOUTONS LONGS EN BAS (FIXES) ---
+            _buildBottomActionButtons(),
           ],
         );
       }),
     );
   }
 
-  // --- COMPOSANTS UI RÉVISÉS ---
+  // --- NOUVEAU : LISTE DES PRODUITS EN DROPDOWN ---
+  Widget _buildProductsExpansionTile() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Theme(
+        data: Theme.of(Get.context!).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: Icon(PhosphorIcons.shoppingCart(), color: AppColors.generalColor),
+          title: Text(
+            "${controller.items.length} article(s) commandé(s)",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+          children: [
+            const Divider(height: 1),
+            ...controller.items.map((item) => _buildProductItemCard(item)).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // --- NOUVEAU : BOUTONS LONGS SUR TOUTE LA LARGEUR ---
+  Widget _buildBottomActionButtons() {
+    if (!controller.canModify) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)]
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Bouton Modifier (Long)
+            SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  final orderId = controller.order['id'];
+                  Get.toNamed(Routes.ACTIVITYUPDATE, arguments: orderId);
+                },
+                icon: Icon(PhosphorIcons.pencilSimple(), size: 20),
+                label: const Text("MODIFIER LA COMMANDE", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.generalColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  elevation: 0,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Bouton Annuler (Long)
+            SizedBox(
+            width: double.infinity,
+            height: 55,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                DialogLogout.show(
+                  title: "Annuler ?",
+                  message: "Voulez-vous vraiment annuler cette commande ?",
+                  imagePath: "assets/images/error.png",
+                  color: AppColors.generalColor,
+                  onConfirm: () => controller.cancelCommande(),
+                );
+              },
+              icon: Icon(PhosphorIcons.xCircle(), size: 20, color: Colors.white),
+              label: const Text(
+                "ANNULER LA COMMANDE", 
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Colors.white)
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, 
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              ),
+            ),
+          ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   Widget _buildSectionHeader(String t, IconData i) => Padding(
     padding: const EdgeInsets.only(bottom: 10, left: 4),
@@ -136,40 +193,35 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
     final double prixUnitaire = double.tryParse(item['prix_unitaire']?.toString() ?? "0") ?? 0;
     final int quantite = int.tryParse(item['quantity']?.toString() ?? "0") ?? 0;
     final double sousTotal = prixUnitaire * quantite;
-    
-    // Récupération et formatage du type de commerce
     final String typeCommerce = item['type_commerce']?.toString().toUpperCase() ?? "VENTE";
+    
+    final String? imageUrl = item['produit_image'];
+    final baseUrl = ApiUrlPage.baseUrl; 
+    final String fullImageUrl = "$baseUrl$imageUrl";
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        border: Border(bottom: BorderSide(color: Colors.grey.shade100))
       ),
       child: Row(
         children: [
-          // Icône avec badge de quantité
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                height: 50, width: 50,
-                decoration: BoxDecoration(
-                  color: AppColors.generalColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(PhosphorIcons.package(), color: AppColors.generalColor),
-              ),
-              Positioned(
-                top: -5, right: -5,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-                  child: Text("x$quantite", style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
-                ),
-              )
-            ],
+          Container(
+            height: 45, width: 45,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: imageUrl != null && imageUrl.isNotEmpty
+                  ? Image.network(
+                      fullImageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Icon(PhosphorIcons.package(), size: 18),
+                    )
+                  : Icon(PhosphorIcons.package(), size: 18),
+            ),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -177,66 +229,42 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(item['produit_name'] ?? "Produit", 
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
-                const SizedBox(height: 4),
-                                Row(
+                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                Row(
                   children: [
-                    _buildTypeBadge(typeCommerce), // Notre nouveau badge
+                    _buildTypeBadge(typeCommerce),
                     const SizedBox(width: 8),
-                    Text("${prixUnitaire.toInt()} F / unité", 
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 11)),
+                    Text("x$quantite", style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
                   ],
                 ),
               ],
             ),
           ),
           Text("${sousTotal.toInt()} F", 
-              style: TextStyle(fontWeight: FontWeight.w900, color: AppColors.generalColor, fontSize: 14)),
+              style: TextStyle(fontWeight: FontWeight.w900, color: AppColors.generalColor, fontSize: 13)),
         ],
       ),
     );
   }
 
-  // Widget pour afficher le petit badge (Vente, Recharge, etc.)
   Widget _buildTypeBadge(String type) {
     Color color;
-    String label;
-
     switch (type) {
-      case "RECHARGE":
-        color = Colors.green;
-        label = "RECHARGE";
-        break;
-      case "ECHANGE":
-        color = Colors.orange;
-        label = "ÉCHANGE";
-        break;
-      default:
-        color = Colors.blue;
-        label = "VENTE";
+      case "RECHARGE": color = Colors.green; break;
+      case "ECHANGE": color = Colors.orange; break;
+      default: color = Colors.blue;
     }
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.2))
-      ),
-      child: Text(
-        label,
-        style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 0.5),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
+      child: Text(type, style: TextStyle(color: color, fontSize: 8, fontWeight: FontWeight.w900)),
     );
   }
 
   Widget _buildFinanceCard() {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white, 
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: Column(
         children: [
           _buildInfoRow(PhosphorIcons.truck(), "Frais de livraison", "${controller.order['prix_livraison']} F"),
@@ -257,10 +285,7 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
   Widget _buildDeliveryCard() {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white, 
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: Column(
         children: [
           _buildInfoRow(PhosphorIcons.user(), "Client", controller.order['customer_name']),
@@ -281,7 +306,7 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold)),
-              Text(value ?? "N/A", style: const TextStyle(color: Color(0xFF2D3436), fontWeight: FontWeight.w700, fontSize: 13)),
+              Text(value ?? "N/A", style:  TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w700, fontSize: 13)),
             ],
           ),
         ),
@@ -292,9 +317,9 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
   Color _getStatusColor(String etat) {
     switch (etat) {
       case "EN_ATTENTE": return AppColors.generalColor;
-      case "LIVRE": return AppColors.generalColor;
+      case "LIVRE": return Colors.green.shade600;
       case "ANNULE": return Colors.red;
-      case "EN_COURS": return AppColors.generalColor;
+      case "EN_COURS": return Colors.orange;
       default: return Colors.grey;
     }
   }

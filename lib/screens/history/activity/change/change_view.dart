@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'catalog_controller.dart';
-import '../../../servicesApp/urlBase.dart';
-import '../../../appColors/appColors.dart';
-import '../../../routes/app_routes.dart';
+import 'change_controller.dart';
+import '../../../../servicesApp/urlBase.dart';
+import '../../../../appColors/appColors.dart';
+import '../../../../routes/app_routes.dart';
 import '../../../../loading/loading.dart';
 
-class CatalogView extends GetView<CatalogController> {
-  const CatalogView({super.key});
+class ChangeView extends GetView<ChangeController> {
+  const ChangeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FD),
       appBar: AppBar(
-        title: const Text("Choisir une bouteille",
-            style:  TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+        title: const Text("Espace échange bouteille",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -54,18 +54,13 @@ class CatalogView extends GetView<CatalogController> {
   Widget _buildProductRow(BuildContext context, Map<String, dynamic> product) {
     return Obx(() {
       bool isSelected = controller.selectedProductsIds.contains(product['id']);
-      
       String poids = product['poids_value']?.toString() ?? "0";
-      int pRecharge = product['price_recharge'] ?? 0;
-      int pVente = product['price_vente'] ?? 0;
+      
+      // Extraction données échange
       int pEchange = product['price_echange'] ?? 0;
+      int stockEchange = product['damaged'] ?? 0; 
 
-      int stockRecharge = product['full'] ?? 0;
-      int stockVente = product['empty'] ?? 0;
-      int stockEchange = product['damaged'] ?? 0;
-
-      // VERIFICATION DU STOCK TOTAL
-      bool hasStock = (stockRecharge + stockVente + stockEchange) > 0;
+      bool hasStock = stockEchange > 0;
 
       final String fullImageUrl = (product['image'] != null && product['image'].isNotEmpty)
           ? "${ApiUrlPage.baseUrl}${product['image']}"
@@ -79,7 +74,6 @@ class CatalogView extends GetView<CatalogController> {
           margin: const EdgeInsets.only(bottom: 15),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            // CHANGEMENT ICI : Le fond devient gris clair si pas de stock, sinon blanc
             color: hasStock ? Colors.white : Colors.grey.shade200, 
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
@@ -91,21 +85,47 @@ class CatalogView extends GetView<CatalogController> {
           ),
           child: Row(
             children: [
-              // IMAGE
-              Container(
-                height: 90, width: 90,
-                decoration: BoxDecoration(
-                  // Petit rappel visuel sur le fond de l'image aussi
-                  color: hasStock ? Colors.grey[50] : Colors.grey[300], 
-                  borderRadius: BorderRadius.circular(12)
-                ),
-                child: Hero(
-                  tag: "img_${product['id']}",
-                  child: fullImageUrl.isNotEmpty
-                      ? Image.network(fullImageUrl, fit: BoxFit.contain, 
-                          errorBuilder: (c, e, s) => const Icon(Icons.propane_tank, color: Colors.grey))
-                      : const Icon(Icons.propane_tank, color: Colors.grey),
-                ),
+              // IMAGE AVEC BADGE DE STOCK POSITIONNÉ
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: 90, width: 90,
+                    decoration: BoxDecoration(
+                      color: hasStock ? Colors.grey[50] : Colors.grey[300], 
+                      borderRadius: BorderRadius.circular(12)
+                    ),
+                    child: Hero(
+                      tag: "img_${product['id']}",
+                      child: fullImageUrl.isNotEmpty
+                          ? Image.network(fullImageUrl, fit: BoxFit.contain, 
+                              errorBuilder: (c, e, s) => const Icon(Icons.propane_tank, color: Colors.grey))
+                          : const Icon(Icons.propane_tank, color: Colors.grey),
+                    ),
+                  ),
+                  // BADGE STOCK DISPONIBLE (Positioned sur l'image)
+                  if (hasStock)
+                    Positioned(
+                      top: -5,
+                      right: -5,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.generalColor,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                        ),
+                        child: Text(
+                          "$stockEchange Bouteille(s)",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
               const SizedBox(width: 15),
 
@@ -124,12 +144,10 @@ class CatalogView extends GetView<CatalogController> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900, 
                                 fontSize: 14,
-                                // Texte un peu plus discret si pas de stock
                                 color: hasStock ? Colors.black : Colors.grey[600] 
                               )),
                         ),
                         
-                        // COCHE CARRÉE (Invisible si pas de stock pour éviter la confusion)
                         if (hasStock)
                           GestureDetector(
                             onTap: () => controller.toggleSelection(product['id']),
@@ -145,52 +163,41 @@ class CatalogView extends GetView<CatalogController> {
                             ),
                           )
                         else
-                          // Petit badge "Épuisé" à la place de la coche
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(4)),
-                            child: const Text("VIDE", style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                            child: const Text("EPUISE", style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
                           ),
-                      ],
-                    ),
-                    Text("$poids kg",
-                        style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold)),
-                    
-                    const SizedBox(height: 12),
-                    
-                    // SECTION DES PRIX ET STOCKS
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _priceIndicator(stockRecharge, pRecharge, hasStock ? Colors.green : Colors.grey, "RECHARGE"),
-                        _priceIndicator(stockVente, pVente, hasStock ? Colors.orange : Colors.grey, "VENTE"),
-                        _priceIndicator(stockEchange, pEchange, hasStock ? Colors.blue : Colors.grey, "ECHANGE"),
-                      ],
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                  Text("$poids kg",
+                      style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold)),
+                  
+                  const SizedBox(height: 8),
+                  
+                  // AFFICHAGE DU PRIX ÉCHANGE
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("PRIX ÉCHANGE", style: TextStyle(fontSize: 7, color: Colors.black, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 2),
+                      Text("$pEchange F", 
+                        style: TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.w900, 
+                          color: hasStock ? AppColors.generalColor : Colors.grey
+                        )),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    });
-  }
-
-  // LA MÉTHODE QUI MANQUAIT (ou qui était mal nommée)
-  Widget _priceIndicator(int count, int price, Color color, String label) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 7, color: Colors.grey, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 2),
-        Text("$price F", 
-          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.black87)),
-        Text("$count disp.", 
-          style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
-      ],
+      ),
     );
-  }
+  });
+}
 
   Widget _buildBrandDropdown() {
     return Padding(
@@ -241,9 +248,9 @@ class CatalogView extends GetView<CatalogController> {
         child: SafeArea(
           child: ElevatedButton(
             onPressed: hasSelection 
-              ? () => Get.toNamed(Routes.CHECKOUT, arguments: {
-                'productIds': controller.selectedProductsList.map((e) => e['id'].toString()).toList(),     
-                'orderId': controller.orderId
+              ? () => Get.toNamed(Routes.ORDERVALIDATION, arguments: {
+                  'products': controller.selectedProductsList, 
+                  'number': 3,
                 })
               : null,
             style: ElevatedButton.styleFrom(

@@ -85,7 +85,7 @@ class ActivityDetailController extends GetxController {
   String get formattedDate {
     if (order['created'] == null) return "Date inconnue";
     DateTime date = DateTime.parse(order['created'].toString());
-    return DateFormat('dd MMM yyyy • HH:mm').format(date);
+    return DateFormat('dd MMM yyyy • HH:mm','fr_FR').format(date);
   }
 
   String get shortId => order['id'] != null 

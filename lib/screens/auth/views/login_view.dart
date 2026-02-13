@@ -5,6 +5,9 @@ import '../../../appColors/appColors.dart';
 import 'package:flutter/services.dart';
 import '../../../routes/app_routes.dart';
 
+
+
+
 class LoginView extends GetView<AuthController> {
   const LoginView({super.key});
 
@@ -12,123 +15,85 @@ class LoginView extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // ⚡ resizeToAvoidBottomInset à false permet d'éviter que le clavier ne pousse tout vers le haut et crée un overflow
-      resizeToAvoidBottomInset: false, 
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.white, Colors.grey.shade50],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-            child: Column(
-              children: [
-                const Spacer(flex: 1), // ⚡ Espace flexible en haut
-
-                // --- LOGO ---
-                _buildLogoSection(),
-                
-                const Text(
-                  "L'ÉNERGIE QUI VOUS RAPPROCHE",
-                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: Colors.grey, letterSpacing: 1.5),
+      resizeToAvoidBottomInset: true, 
+      body: SingleChildScrollView( 
+        child: Column(
+          children: [
+            // --- AJOUT DE L'IMAGE EN HAUT (TOUTE LA LARGEUR) ---
+            Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.35,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/pub2.jpg"), 
+                  fit: BoxFit.cover,
                 ),
+              ),
+            ),
 
-                const Spacer(flex: 2), // ⚡ Espace entre logo et titre
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  
+                  // --- TES TEXTES (STYLE CONSERVÉ) ---
+                  Text(
+                    "Bienvenue sur NAFAGAZ",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    "Commande de bouteilles simple, rapide et sûre ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13, color: Colors.blueGrey),
+                  ),
 
-                Text(
-                  "Bienvenue sur NAFAGAZ",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.grey[800]),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                "Commande de bouteilles simple, rapide et sûre ",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: Colors.blueGrey),
-                ),
+                  const SizedBox(height: 30),
 
-                const Spacer(flex: 2),
+                  // --- TON FORMULAIRE (STYLE CONSERVÉ) ---
+                  _buildModernField(child: _buildPhoneField()),
+                  const SizedBox(height: 15),
+                  _buildModernField(child: _buildPasswordField()),
 
-                // Formulaire
-                _buildModernField(child: _buildPhoneField()),
-                const SizedBox(height: 15),
-                _buildModernField(child: _buildPasswordField()),
-
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => print("Mot de passe oublié"),
-                    child: Text(
-                      "Mot de passe oublié ?",
-                      style: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w700, fontSize: 13),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => Get.toNamed(Routes.PASSWORDFORGET),
+                      child: Text(
+                        "Mot de passe oublié ?",
+                        style: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w700, fontSize: 13),
+                      ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                // Bouton Se connecter
-                _buildSubmitButton(),
+                  // --- TON BOUTON (STYLE CONSERVÉ) ---
+                  _buildSubmitButton(),
 
-                const Spacer(flex: 2),
+                  // const SizedBox(height: 30),
 
-                // Connexion Biométrique
-                _buildFingerprintAction(),
+                  // // --- TES BOUTONS DU BAS (STRICTEMENT GARDÉS) ---
+                  // _buildFingerprintAction(),
 
-                const Spacer(flex: 2),
+                  const SizedBox(height: 30),
 
-                // SECTION INSCRIPTION
-                _buildRegisterLink(),
-                
-                const Spacer(flex: 1),
-                
-                _buildAppSource("By Elite IT Partners"),
-              ],
+                  _buildRegisterLink(),
+                  
+                  const SizedBox(height: 20),
+                  
+                  _buildAppSource("By Elite IT Partners"),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  // --- COMPOSANTS OPTIMISÉS POUR L'ESPACE ---
-
-  Widget _buildLogoSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 60, width: 60, // ⚡ Taille réduite pour gagner de l'espace
-          decoration: BoxDecoration(
-            color: Colors.white, 
-            shape: BoxShape.circle, 
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset("assets/images/nafagaz_truck_orange.png", fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.local_shipping, color: Color(0xFF003317), size: 30),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        RichText(
-          text: const TextSpan(
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: -1.0),
-            children: [
-              TextSpan(text: "NAFA", style: TextStyle(color: Color(0xFF003317))),
-              TextSpan(text: "GAZ", style: TextStyle(color: Color(0xFFFF5722))),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // --- TOUS TES COMPOSANTS CI-DESSOUS RESTENT IDENTIQUES ---
 
   Widget _buildModernField({required Widget child}) {
     return Container(
@@ -171,12 +136,12 @@ class LoginView extends GetView<AuthController> {
       width: double.infinity, height: 55,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: const Color(0xFF003317).withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: AppColors.generalColor.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: ElevatedButton(
         onPressed: controller.login,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF003317), foregroundColor: Colors.white,
+          backgroundColor: AppColors.generalColor, foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 0,
         ),
@@ -185,18 +150,18 @@ class LoginView extends GetView<AuthController> {
     );
   }
 
-  Widget _buildFingerprintAction() {
-    return InkWell(
-      onTap: () {},
-      child: Column(
-        children: [
-          Icon(Icons.fingerprint, color: AppColors.generalColor, size: 45),
-          const SizedBox(height: 5),
-          Text("Utiliser l'empreinte", style: TextStyle(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
+  // Widget _buildFingerprintAction() {
+  //   return InkWell(
+  //     onTap: () {},
+  //     child: Column(
+  //       children: [
+  //         Icon(Icons.fingerprint, color: AppColors.generalColor, size: 45),
+  //         const SizedBox(height: 5),
+  //         Text("Utiliser l'empreinte", style: TextStyle(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.bold)),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildRegisterLink() {
     return Wrap(
@@ -220,6 +185,7 @@ class LoginView extends GetView<AuthController> {
     return InputDecoration(
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       hintText: hint, labelText: label,
+      hintStyle: TextStyle(color:Colors.grey,fontWeight: FontWeight.bold, fontSize: 10,),
       prefixIcon: Icon(icon, color: AppColors.generalColor, size: 20),
       suffixIcon: suffix,
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.generalColor.withOpacity(0.5), width: 1)),

@@ -30,30 +30,32 @@ class UpdateActivityController extends GetxController {
     }
   }
 
-  void chooseChangeQuantity() {
-    if (orderData.isEmpty) return;
+void chooseChangeQuantity() {
+  if (orderData.isEmpty) return;
 
-    List<Map<String, String>> products = [];
-    if (orderData['items'] != null) {
-      for (var item in orderData['items']) {
-        String pId = "";
-        if (item['produit'] is Map) {
-          pId = item['produit']['id'].toString();
-        } else {
-          pId = item['produit'].toString();
-        }
-        
-        if (!products.any((element) => element['id'] == pId)) {
-          products.add({"id": pId});
-        }
+  List<String> productIds = [];
+
+  if (orderData['items'] != null) {
+    for (var item in orderData['items']) {
+      String pId = "";
+      
+      if (item['produit'] is Map) {
+        pId = item['produit']['id'].toString();
+      } else {
+        pId = item['produit'].toString();
+      }
+      
+      if (pId.isNotEmpty && !productIds.contains(pId)) {
+        productIds.add(pId);
       }
     }
-
-    Get.toNamed(Routes.CHECKOUT, arguments: {
-      "orderId": orderId,
-      "products": products, 
-    });
   }
+
+  Get.toNamed(Routes.CHECKOUT, arguments: {
+    "orderId": orderId,
+    "productIds": productIds, 
+  });
+}
 
   
   void chooseChangeBottle() {

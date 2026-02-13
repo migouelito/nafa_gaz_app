@@ -36,7 +36,6 @@ class HomePage extends GetView<HomeController> {
       final index = controller.currentIndex.value;
       return Scaffold(
         backgroundColor: isDarkMode ? Colors.black : const Color(0xFFF8F9FD),
-        // On retire l'AppBar d'ici pour que chaque page affiche la sienne
         appBar: null, 
         body: _buildPage(index),
         bottomNavigationBar: _buildBottomNavigationBar(index, isDarkMode, primaryColor),
@@ -82,6 +81,7 @@ class HomePage extends GetView<HomeController> {
           topRight: Radius.circular(30),
         ),
         child: BottomNavigationBar(
+          backgroundColor: Colors.white,
           currentIndex: index,
           onTap: (i) => controller.changeIndex(i),
           type: BottomNavigationBarType.fixed,
