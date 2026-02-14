@@ -614,6 +614,7 @@ Future<Map<String, dynamic>?> fetchCommandeDetail(String idCommande) async {
   }
 }
 
+
 // Future<Map<String, dynamic>?> fetchCommandeDetail(String idCommande) async {
 //   final token = await getAccessToken();
 //   if (token == null) return null;
