@@ -20,7 +20,7 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: _buildAppBar(context),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -28,31 +28,31 @@ class DashboardView extends GetView<DashboardController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
+            const SizedBox(height: 20),
             _buildPromoSlider(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             _buildServicesSection(context),
-            // _buildExpressSection(),
-            // const SizedBox(height: 30),
+            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
 
-  // --- APP BAR ---
+  // --- APP BAR ÉPURÉE (Blanche, inchangée) ---
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Row(
-        children: [
-         
-          const Text(
-            "NAFAGAZ",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 1),
-          ),
-        ],
+      title: const Text(
+        "NAFAGAZ",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+          
       ),
-      backgroundColor: AppColors.generalColor,
-      foregroundColor: Colors.white,
+      backgroundColor: Colors.white,
+      foregroundColor: const Color(0xFF1A1F36),
       elevation: 0,
       automaticallyImplyLeading: false,
       actions: [
@@ -66,46 +66,32 @@ class DashboardView extends GetView<DashboardController> {
     return Container(
       margin: const EdgeInsets.only(right: 8),
       child: Stack(
-        alignment: Alignment.center,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              shape: BoxShape.circle,
+          IconButton(
+            icon: Icon(
+              PhosphorIcons.bell(PhosphorIconsStyle.regular),
+              size: 24,
+              color: const Color(0xFF1A1F36),
             ),
-            child: IconButton(
-              icon: Icon(PhosphorIcons.bell(PhosphorIconsStyle.bold), size: 24),
-              onPressed: () => Get.toNamed(Routes.NOTIFICATION),
-            ),
+            onPressed: () => Get.toNamed(Routes.NOTIFICATION),
           ),
-          Positioned(
-            right: 6,
-            top: 6,
-            child: Obx(() {
-              int count = int.tryParse(controller.notificationCount.value) ?? 0;
-              return count > 0
-                  ? Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
+          Obx(() {
+            int count = int.tryParse(controller.notificationCount.value) ?? 0;
+            return count > 0
+                ? Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE53E3E),
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.generalColor, width: 2),
                       ),
-                      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
-                      child: Center(
-                        child: Text(
-                          count > 9 ? '9+' : count.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            }),
-          )
+                    ),
+                  )
+                : const SizedBox.shrink();
+          }),
         ],
       ),
     );
@@ -118,64 +104,57 @@ class DashboardView extends GetView<DashboardController> {
         MaterialPageRoute(builder: (c) => const WalletScreen()),
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white.withOpacity(0.25),
-              Colors.white.withOpacity(0.15),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+          color: const Color(0xFFF0F3F8),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(PhosphorIcons.wallet(PhosphorIconsStyle.fill), 
-              color: Colors.white, size: 18),
-            const SizedBox(width: 8),
+            Icon(
+              PhosphorIcons.wallet(PhosphorIconsStyle.regular),
+              color: const Color(0xFF4A5568),
+              size: 16,
+            ),
+            const SizedBox(width: 6),
             Obx(() => Text(
               controller.walletBalance.value,
               style: const TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 15,
-                color: Colors.white,
-                letterSpacing: 0.5,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: Color(0xFF1A1F36),
               ),
             )),
-            const SizedBox(width: 6),
-            const Icon(Icons.add_circle_rounded, color: Colors.white, size: 18),
           ],
         ),
       ),
     );
   }
 
-  // --- HEADER ---
+  // --- HEADER ÉPURÉ ---
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(() => Text(
-            "Bonjour, ${controller.userName.value} 👋",
+            "Bonjour, ${controller.userName.value}",
             style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w900,
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
               color: Color(0xFF1A1F36),
-              letterSpacing: -0.5,
             ),
           )),
           const SizedBox(height: 4),
           Text(
-            "Comment pouvons-nous vous aider aujourd'hui ?",
+            "Comment pouvons-nous vous aider ?",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 15,
               color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],
@@ -183,161 +162,118 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-Widget _buildPromoSlider() {
-  return Column(
-    children: [
-      SizedBox(
-        height: 200, // Hauteur augmentée pour éviter que le zoom ne coupe l'image
-        child: PageView.builder(
-          controller: controller.pageController,
-          onPageChanged: controller.onPageChanged,
-          itemBuilder: (context, index) {
-            return Obx(() {
-              // Calcul de la distance par rapport au centre (0.0 = centre parfait)
-              double relativePosition = controller.currentPageValue.value - index;
+  Widget _buildPromoSlider() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          child: PageView.builder(
+            controller: controller.pageController,
+            physics: const BouncingScrollPhysics(),
+            onPageChanged: (index) {
+              controller.currentIndex.value = index % controller.promoImages.length;
+            },
+            // Utilisation de la même plage infinie
+            itemCount: DashboardController.infiniteRange, 
+            itemBuilder: (context, index) {
+              int realIndex = index % controller.promoImages.length;
               
-              // 1.0 au centre, descend à 0.85 quand l'image s'éloigne
-              double scale = (1 - (relativePosition.abs() * 0.15)).clamp(0.85, 1.0);
+              return Obx(() {
+                // Calcul du scale identique au style fluide de AccueilPage
+                double relativePosition = controller.currentPageValue.value - index;
+                double scale = (1 - (relativePosition.abs() * 0.15)).clamp(0.85, 1.0);
 
-              return Transform.scale(
-                scale: scale,
-                child: _buildAdImageBanner(
-                  controller.promoImages[index % controller.promoImages.length],
-                ),
-              );
-            });
-          },
-        ),
-      ),
-      const SizedBox(height: 4),
-      // --- INDICATEURS (POINTS) ---
-      Obx(() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          controller.promoImages.length,
-          (index) => AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            height: 8,
-            width: controller.currentIndex.value == index ? 8 : 8,
-            decoration: BoxDecoration(
-              color: controller.currentIndex.value == index 
-                  ? AppColors.generalColor 
-                  : Colors.grey[300],
-              borderRadius: BorderRadius.circular(4),
-            ),
+                return Transform.scale(
+                  scale: scale,
+                  child: _buildAdImageBanner(controller.promoImages[realIndex]),
+                );
+              });
+            },
           ),
         ),
-      )),
-    ],
-  );
-}
-Widget _buildAdImageBanner(String imagePath) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          )
-        ],
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover, 
-        ),
-      ),
+        const SizedBox(height: 12),
+        // Indicateurs mis à jour avec AppColors.generalColor
+        Obx(() => Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            controller.promoImages.length,
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              height: 7,
+              width: controller.currentIndex.value == index ? 20 : 7, // Même style de points
+              decoration: BoxDecoration(
+                color: controller.currentIndex.value == index
+                    ? AppColors.generalColor 
+                    : AppColors.generalColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        )),
+      ],
     );
   }
-  Widget _buildAdBanner(
-    Gradient gradient,
-    String title,
-    String subtitle,
-    IconData icon,
-    String buttonText,
-  ) {
+  Widget _buildAdImageBanner(String imagePath) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.2),
+            color: Colors.black.withOpacity(0.15),
             blurRadius: 20,
             offset: const Offset(0, 8),
+            spreadRadius: 2,
           )
         ],
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -20,
-            top: -20,
-            child: Icon(icon, color: Colors.white.withOpacity(0.1), size: 140),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    height: 1.3,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        buttonText,
-                        style: TextStyle(
-                          color: AppColors.generalColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(Icons.arrow_forward, 
-                        color: AppColors.generalColor, size: 16),
-                    ],
-                  ),
-                ),
-              ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
             ),
-          ),
-        ],
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 16,
+              left: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  "Promo",
+                  style: TextStyle(
+                    color: AppColors.generalColor, // Couleur principale ici
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -352,79 +288,28 @@ Widget _buildAdImageBanner(String imagePath) {
           const Text(
             "Services",
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
               color: Color(0xFF1A1F36),
-              letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
-            crossAxisSpacing: 14,
-            mainAxisSpacing: 14,
-            childAspectRatio: 0.88,
+            crossAxisCount: 4,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.9,
             children: [
-                _buildServiceCard(
-                context,
-                PhosphorIcons.arrowsClockwise(PhosphorIconsStyle.bold),
-                "Recharger\nGaz",
-                AppColors.generalColor,
-                () => Get.toNamed(Routes.RECHARGE),//Navigator.push(context, MaterialPageRoute(builder: (c) => const RechargeScreen())),
-              ),
-                _buildServiceCard(
-                context,
-                PhosphorIcons.repeat(PhosphorIconsStyle.bold),
-                "Échanger\nGaz",
-                AppColors.generalColor,
-                () => Get.toNamed(Routes.CHANGE),//Navigator.push(context, MaterialPageRoute(builder: (c) => const SwapScreen())),
-              ),
-                _buildServiceCard(
-                context,
-                PhosphorIcons.plusCircle(PhosphorIconsStyle.bold),
-                "Nouvelle\nBouteille",
-              AppColors.generalColor,
-              ()=> Get.toNamed(Routes.BUY)
-                // () => Navigator.push(context, MaterialPageRoute(builder: (c) => const NewBottleScreen())),
-              ),
-   
-              _buildServiceCard(
-                context,
-                PhosphorIcons.handCoins(PhosphorIconsStyle.bold),
-                "Payer pour\nun tiers",
-                AppColors.generalColor,
-                () => Navigator.push(context, MaterialPageRoute(builder: (c) => const PayGasScreen())),
-              ),
-              _buildServiceCard(
-                context,
-                PhosphorIcons.calendarCheck(PhosphorIconsStyle.bold),
-                "Planifier\nLivraison",
-                AppColors.generalColor,
-                () => Navigator.push(context, MaterialPageRoute(builder: (c) => const SubscriptionScreen())),
-              ),
-              _buildServiceCard(
-                context,
-                PhosphorIcons.wrench(PhosphorIconsStyle.bold),
-                "SOS &\nOutils",
-                AppColors.generalColor,
-                () => Navigator.push(context, MaterialPageRoute(builder: (c) => const SosScreen())),
-              ),
-              _buildServiceCard(
-                context,
-                PhosphorIcons.storefront(PhosphorIconsStyle.bold),
-                "Espace\nPro",
-                AppColors.generalColor,
-                () => Navigator.push(context, MaterialPageRoute(builder: (c) => const ProScreen())),
-              ),
-              _buildServiceCard(
-                context,
-                PhosphorIcons.gift(PhosphorIconsStyle.bold),
-                "Gagner\nde l'argent",
-                AppColors.generalColor,
-                () => Navigator.push(context, MaterialPageRoute(builder: (c) => const WalletScreen())),
-              ),
+              _buildServiceCard(context, PhosphorIcons.arrowsClockwise(PhosphorIconsStyle.regular), "Recharger", () => Get.toNamed(Routes.RECHARGE)),
+              _buildServiceCard(context, PhosphorIcons.repeat(PhosphorIconsStyle.regular), "Échanger", () => Get.toNamed(Routes.CHANGE)),
+              _buildServiceCard(context, PhosphorIcons.plusCircle(PhosphorIconsStyle.regular), "Nouvelle", () => Get.toNamed(Routes.BUY)),
+              _buildServiceCard(context, PhosphorIcons.handCoins(PhosphorIconsStyle.regular), "Payer tiers", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const PayGasScreen()))),
+              _buildServiceCard(context, PhosphorIcons.calendarCheck(PhosphorIconsStyle.regular), "Planifier", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const SubscriptionScreen()))),
+              _buildServiceCard(context, PhosphorIcons.wrench(PhosphorIconsStyle.regular), "SOS", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const SosScreen()))),
+              _buildServiceCard(context, PhosphorIcons.storefront(PhosphorIconsStyle.regular), "Espace Pro", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const ProScreen()))),
+              _buildServiceCard(context, PhosphorIcons.gift(PhosphorIconsStyle.regular), "Gagner", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const WalletScreen()))),
             ],
           ),
         ],
@@ -432,162 +317,42 @@ Widget _buildAdImageBanner(String imagePath) {
     );
   }
 
-  Widget _buildServiceCard(
-    BuildContext context,
-    IconData icon,
-    String label,
-    Color color,
-    VoidCallback onTap,
-  ) {
+  Widget _buildServiceCard(BuildContext context, IconData icon, String label, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 15,
-              offset: const Offset(0, 4),
-            )
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [color, color.withOpacity(0.8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: color.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  )
-                ],
-              ),
-              child: Icon(icon, color: Colors.white, size: 28),
+      borderRadius: BorderRadius.circular(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0F3F8),
+              borderRadius: BorderRadius.circular(12),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF1A1F36),
-                  height: 1.3,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // --- EXPRESS BUTTON ---
-  // Widget _buildExpressSection() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 24),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(
-  //           "Raccourci",
-  //           style: TextStyle(
-  //             fontSize: 13,
-  //             fontWeight: FontWeight.w700,
-  //             color: Colors.grey[500],
-  //             letterSpacing: 0.5,
-  //           ),
-  //         ),
-  //         const SizedBox(height: 12),
-  //         _buildExpressButton(),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget _buildExpressButton() {
-    return Container(
-      height: 64,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.generalColor, AppColors.generalColor.withOpacity(0.85)],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.generalColor.withOpacity(0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
-          )
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => Get.toNamed(Routes.CALALOG),
-          borderRadius: BorderRadius.circular(20),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 24),
-                ),
-                const SizedBox(width: 14),
-                const Expanded(
-                  child: Text(
-                    "COMMANDE EXPRESS (1-CLIC)",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
-                ),
-              ],
+            child: Icon(
+              icon, 
+              color: AppColors.generalColor, // Icône aux couleurs de l'app
+              size: 22,
             ),
           ),
-        ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF4A5568),
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
-
-  
 }
-
 
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';

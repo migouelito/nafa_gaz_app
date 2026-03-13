@@ -23,10 +23,10 @@ import '../screens/history/activity/update_activity/update_activity_binding.dart
 import '../screens/history/activity/update_activity/update_activity_view.dart';
 import '../screens/notifications/notification_view.dart';
 import '../screens/notifications/notification_binding.dart';
-import '../screens/profile/address/address_binding.dart';
-import '../screens/profile/address/address_view.dart';
-import '../screens/profile/addresslist/address_binding.dart';
-import '../screens/profile/addresslist/address_list_view.dart';
+import '../screens/profile/creer_address/address_binding.dart';
+import '../screens/profile/creer_address/address_view.dart';
+import '../screens/profile/list_address/address_binding.dart';
+import '../screens/profile/list_address/address_list_view.dart';
 import '../screens/profile/edit_profile/edit_profil_binding.dart';
 import '../screens/profile/edit_profile/edit_profil_view.dart';
 import '../screens/order/detail_produit/detail_produit_binding.dart';

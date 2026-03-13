@@ -259,7 +259,7 @@ class RechargeView extends GetView<RechargeController> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             ),
             child: Text(
-              hasSelection ? "VOIR LE PANIER ($count)" : "SÉLECTIONNEZ UNE BOUTEILLE",
+              hasSelection ? "PASSER AU PAIEMENT ($count)" : "SÉLECTIONNEZ UNE BOUTEILLE",
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
             ),
           ),

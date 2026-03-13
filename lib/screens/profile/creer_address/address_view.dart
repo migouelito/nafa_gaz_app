@@ -11,6 +11,7 @@ class AddAddressView extends GetView<AddAddressController> {
 
   @override
   Widget build(BuildContext context) {
+    // Vérification du service GPS au démarrage
     Future.delayed(Duration.zero, () async {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
@@ -30,6 +31,7 @@ class AddAddressView extends GetView<AddAddressController> {
       ),
       body: Column(
         children: [
+          // PARTIE CARTE
           Expanded(
             flex: 3,
             child: Stack(
@@ -38,7 +40,7 @@ class AddAddressView extends GetView<AddAddressController> {
                   mapController: controller.mapController,
                   options: MapOptions(
                     initialCenter: controller.center.value,
-                    initialZoom: 18.0,
+                    initialZoom: 16.0, 
                     maxZoom: 20,
                     onPositionChanged: (MapCamera camera, bool hasGesture) {
                       if (hasGesture) controller.center.value = camera.center;
@@ -46,14 +48,17 @@ class AddAddressView extends GetView<AddAddressController> {
                   ),
                   children: [
                     TileLayer(
-                      // Utilisation des tuiles Google Roadmap pour une précision maximale sur les commerces/POI
                       urlTemplate: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
                       userAgentPackageName: 'com.example.nafa_gaz_app',
                     ),
+                    // COUCHE DES ZONES (Polygones colorés)
+                    Obx(() => PolygonLayer(
+                      polygons: controller.polygons.toList(),
+                    )),
                   ],
                 )),
                 
-                // Pin central avec label dynamique
+                // PIN CENTRAL FIXE
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 40),
@@ -66,7 +71,7 @@ class AddAddressView extends GetView<AddAddressController> {
                               color: Colors.black,
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)]),
-                          child: const Text("DÉPOSER ICI",
+                          child: const Text("Livrez-moi ici",
                               style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                         ),
                         const SizedBox(height: 2),
@@ -76,7 +81,7 @@ class AddAddressView extends GetView<AddAddressController> {
                   ),
                 ),
 
-                // Bouton Ma Position
+                // BOUTON MA POSITION
                 Positioned(
                   bottom: 20,
                   right: 20,
@@ -93,7 +98,7 @@ class AddAddressView extends GetView<AddAddressController> {
             ),
           ),
           
-          // Formulaire de détails
+          // FORMULAIRE
           Expanded(
             flex: 2,
             child: _buildForm(),
@@ -106,7 +111,7 @@ class AddAddressView extends GetView<AddAddressController> {
 
   Widget _buildForm() {
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
@@ -121,8 +126,20 @@ class AddAddressView extends GetView<AddAddressController> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF2D3142))),
             const SizedBox(height: 20),
             _inputField(controller.nameController, "Nom du lieu", Icons.home_filled, "Maison, Boutique, Pharmacie..."),
-            const SizedBox(height: 15),
-            _inputField(controller.detailsController, "Précisions importantes", Icons.info_outline, "À côté de la station, porte bleue..."),
+            
+            const SizedBox(height: 10),
+            
+            // CHECKBOX FAVORIS
+         // --- DANS _buildForm() ---
+          Obx(() => CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text("Définir comme lieu de livraison par défaut", 
+              style: TextStyle(fontSize: 13,fontStyle: FontStyle.italic, fontWeight: FontWeight.w900)),
+            value: controller.isFavorite.value,
+            activeColor: AppColors.generalColor,
+            onChanged: (val) => controller.isFavorite.value = val!,
+            controlAffinity: ListTileControlAffinity.leading, 
+          )),
           ],
         ),
       ),

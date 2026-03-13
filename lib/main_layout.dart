@@ -16,15 +16,15 @@ class HomePage extends GetView<HomeController> {
   final List<String> _titles = ["Accueil", "Commandes", "Profil"];
 
   final List<IconData> _activeIcons = [
-    PhosphorIcons.house(PhosphorIconsStyle.fill),
-    PhosphorIcons.shoppingCart(PhosphorIconsStyle.fill),
-    PhosphorIcons.user(PhosphorIconsStyle.fill),
+    PhosphorIcons.house(PhosphorIconsStyle.regular),
+    PhosphorIcons.shoppingCart(PhosphorIconsStyle.regular),
+    PhosphorIcons.user(PhosphorIconsStyle.regular),
   ];
 
   final List<IconData> _inactiveIcons = [
-    PhosphorIcons.house(PhosphorIconsStyle.light),
-    PhosphorIcons.shoppingCart(PhosphorIconsStyle.light),
-    PhosphorIcons.user(PhosphorIconsStyle.light),
+    PhosphorIcons.house(PhosphorIconsStyle.regular),
+    PhosphorIcons.shoppingCart(PhosphorIconsStyle.regular),
+    PhosphorIcons.user(PhosphorIconsStyle.regular),
   ];
 
   @override

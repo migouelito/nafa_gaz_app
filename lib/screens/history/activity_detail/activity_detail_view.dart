@@ -40,15 +40,15 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
                     const SizedBox(height: 25),
                     
                     // --- LISTE DES ARTICLES EN FORMAT DROPDOWN (EXPANSION) ---
-                    _buildSectionHeader("Contenu de la commande", PhosphorIcons.package()),
+                    _buildSectionHeader("Contenu de la commande", PhosphorIcons.package(PhosphorIconsStyle.regular)),
                     _buildProductsExpansionTile(),
                     
                     const SizedBox(height: 20),
-                    _buildSectionHeader("Récapitulatif financier", PhosphorIcons.creditCard()),
+                    _buildSectionHeader("Récapitulatif financier", PhosphorIcons.creditCard(PhosphorIconsStyle.regular)),
                     _buildFinanceCard(),
 
                     const SizedBox(height: 20),
-                    _buildSectionHeader("Informations de livraison", PhosphorIcons.mapPin()),
+                    _buildSectionHeader("Informations de livraison", PhosphorIcons.mapPin(PhosphorIconsStyle.regular)),
                     _buildDeliveryCard(),
                     const SizedBox(height: 20),
                   ],
@@ -74,7 +74,7 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
       child: Theme(
         data: Theme.of(Get.context!).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          leading: Icon(PhosphorIcons.shoppingCart(), color: AppColors.generalColor),
+          leading: Icon(PhosphorIcons.shoppingCart(PhosphorIconsStyle.regular), color: AppColors.generalColor),
           title: Text(
             "${controller.items.length} article(s) commandé(s)",
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -112,7 +112,7 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
                   final orderId = controller.order['id'];
                   Get.toNamed(Routes.ACTIVITYUPDATE, arguments: orderId);
                 },
-                icon: Icon(PhosphorIcons.pencilSimple(), size: 20),
+                icon: Icon(PhosphorIcons.pencilSimple(PhosphorIconsStyle.regular), size: 20),
                 label: const Text("MODIFIER LA COMMANDE", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.generalColor,

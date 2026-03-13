@@ -5,9 +5,6 @@ import '../../../appColors/appColors.dart';
 import 'package:flutter/services.dart';
 import '../../../routes/app_routes.dart';
 
-
-
-
 class LoginView extends GetView<AuthController> {
   const LoginView({super.key});
 
@@ -15,85 +12,109 @@ class LoginView extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true, 
-      body: SingleChildScrollView( 
-        child: Column(
-          children: [
-            // --- AJOUT DE L'IMAGE EN HAUT (TOUTE LA LARGEUR) ---
-            Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.35,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/pub2.jpg"), 
-                  fit: BoxFit.cover,
+      resizeToAvoidBottomInset: true,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    // --- HEADER IMAGE AVEC DÉGRADÉ ---
+                    _buildHeaderImage(context),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          
+                          // --- TEXTES ORIGINAUX ---
+                          Text(
+                            "Bienvenue sur NAFAGAZ",
+                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.generalColor),
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            "Commande de bouteilles simple, rapide et sûre ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 13, color: Colors.blueGrey),
+                          ),
+                          const SizedBox(height: 30),
+                          // --- FORMULAIRE AVEC VOS MÉTHODES ---
+                          _buildModernField(child: _buildPhoneField()),
+                          const SizedBox(height: 15),
+                          _buildModernField(child: _buildPasswordField()),
+
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () => Get.toNamed(Routes.PASSWORDFORGET),
+                              child: Text(
+                                "Mot de passe oublié ?",
+                                style: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w700, fontSize: 13),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          // --- BOUTON DE CONNEXION ---
+                          _buildSubmitButton(),
+
+                          const SizedBox(height: 30),
+
+                          _buildRegisterLink(),
+                        ],
+                      ),
+                    ),
+
+                    // --- FOOTER POUSSÉ VERS LE BAS ---
+                    const Spacer(),
+                    
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: _buildAppSource("By Elite IT Partners"),
+                    ),
+                  ],
                 ),
               ),
             ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  
-                  // --- TES TEXTES (STYLE CONSERVÉ) ---
-                  Text(
-                    "Bienvenue sur NAFAGAZ",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.grey[800]),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    "Commande de bouteilles simple, rapide et sûre ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13, color: Colors.blueGrey),
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  // --- TON FORMULAIRE (STYLE CONSERVÉ) ---
-                  _buildModernField(child: _buildPhoneField()),
-                  const SizedBox(height: 15),
-                  _buildModernField(child: _buildPasswordField()),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () => Get.toNamed(Routes.PASSWORDFORGET),
-                      child: Text(
-                        "Mot de passe oublié ?",
-                        style: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w700, fontSize: 13),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // --- TON BOUTON (STYLE CONSERVÉ) ---
-                  _buildSubmitButton(),
-
-                  // const SizedBox(height: 30),
-
-                  // // --- TES BOUTONS DU BAS (STRICTEMENT GARDÉS) ---
-                  // _buildFingerprintAction(),
-
-                  const SizedBox(height: 30),
-
-                  _buildRegisterLink(),
-                  
-                  const SizedBox(height: 20),
-                  
-                  _buildAppSource("By Elite IT Partners"),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  // --- TOUS TES COMPOSANTS CI-DESSOUS RESTENT IDENTIQUES ---
+  // --- COMPOSANTS AVEC VOS STYLES ORIGINAUX ---
+
+  Widget _buildHeaderImage(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.35,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/pub2.jpg"), 
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              Colors.white.withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildModernField({required Widget child}) {
     return Container(
@@ -111,8 +132,10 @@ class LoginView extends GetView<AuthController> {
       controller: controller.matriculeController,
       keyboardType: TextInputType.phone,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: _inputDecoration(label: "Téléphone", hint: "Numéro de téléphone", icon: Icons.phone_android),
+      decoration: _inputDecoration(label: "Téléphone", hint: "Numéro de téléphone",
+       icon: Icons.phone_android),
     );
+
   }
 
   Widget _buildPasswordField() {
@@ -150,19 +173,6 @@ class LoginView extends GetView<AuthController> {
     );
   }
 
-  // Widget _buildFingerprintAction() {
-  //   return InkWell(
-  //     onTap: () {},
-  //     child: Column(
-  //       children: [
-  //         Icon(Icons.fingerprint, color: AppColors.generalColor, size: 45),
-  //         const SizedBox(height: 5),
-  //         Text("Utiliser l'empreinte", style: TextStyle(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.bold)),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildRegisterLink() {
     return Wrap(
       alignment: WrapAlignment.center,
@@ -185,7 +195,7 @@ class LoginView extends GetView<AuthController> {
     return InputDecoration(
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       hintText: hint, labelText: label,
-      hintStyle: TextStyle(color:Colors.grey,fontWeight: FontWeight.bold, fontSize: 10,),
+      hintStyle: const TextStyle(color:Colors.grey, fontWeight: FontWeight.bold, fontSize: 10,),
       prefixIcon: Icon(icon, color: AppColors.generalColor, size: 20),
       suffixIcon: suffix,
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.generalColor.withOpacity(0.5), width: 1)),

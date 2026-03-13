@@ -29,7 +29,7 @@ class ProfileView extends GetView<ProfileController> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit, color: Colors.white),
+            icon:  Icon(PhosphorIcons.pen(PhosphorIconsStyle.regular), color: Colors.white),
             onPressed: () => Get.toNamed(Routes.EDITPROFILE),
           )
         ],
@@ -48,7 +48,7 @@ class ProfileView extends GetView<ProfileController> {
                   _buildSectionTitle("MES INFORMATIONS"),
                   _buildMenuContainer([
                     _buildMenuItemWithRoute(
-                        PhosphorIcons.mapPin(PhosphorIconsStyle.fill),
+                        PhosphorIcons.mapPin(PhosphorIconsStyle.regular),
                         "Mes Adresses",
                         Routes.ADDRESSLIST),
                   ]),
@@ -58,17 +58,17 @@ class ProfileView extends GetView<ProfileController> {
                   _buildMenuContainer([
                     _buildMenuItemWithNav(
                         context,
-                        PhosphorIcons.wallet(PhosphorIconsStyle.fill),
+                        PhosphorIcons.wallet(PhosphorIconsStyle.regular),
                         "Portefeuille & Parrainage",
                         const WalletScreen()),
                     _buildMenuItemWithNav(
                         context,
-                        PhosphorIcons.translate(PhosphorIconsStyle.fill),
+                        PhosphorIcons.translate(PhosphorIconsStyle.regular),
                         "Langue (Français)",
                         const LanguageScreen()),
                     _buildMenuItemWithNav(
                         context,
-                        PhosphorIcons.info(PhosphorIconsStyle.fill),
+                        PhosphorIcons.info(PhosphorIconsStyle.regular),
                         "Aide & Support",
                         const SupportScreen()),
                   ]),

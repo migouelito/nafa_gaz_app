@@ -681,6 +681,152 @@ Future<bool> cancelCommande(String idCommande) async {
 }
 
 
+//listes des zones de livraison
+Future<List<dynamic>> fetchZones() async {
+  final token = await getAccessToken();
+  if (token == null) return [];
+
+  try {
+    final uri = Uri.parse('$baseUrl/api/zones/list/');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data;
+    } else {
+      print('Erreur lors de la récupération : ${response.statusCode}');
+      return [];
+    }
+  } catch (e) {
+    print('Exception lors de la récupération : $e');
+    return [];
+  }
+}
+
+
+//listes des zones de livraison
+Future<List<dynamic>> fetchLieuLivraison() async {
+  final token = await getAccessToken();
+  if (token == null) return [];
+
+  try {
+    final uri = Uri.parse('$baseUrl/api/lieux-livraison/list/');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data;
+    } else {
+      print('Erreur lors de la récupération : ${response.statusCode}');
+      return [];
+    }
+  } catch (e) {
+    print('Exception lors de la récupération : $e');
+    return [];
+  }
+}
+//Enregistrer une zone de livraison
+Future<bool> lieuLivraison(Map<String, dynamic> data) async {
+  final token = await getAccessToken();
+  if (token == null) return false;
+
+  try {
+    final uri = Uri.parse('$baseUrl/api/lieux-livraison/create/');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode(data),
+    );
+
+    print("STATUS CODE : ${response.statusCode}");
+    print("REPONSE SERVEUR : ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      print('Erreur création lieu livraison : ${response.statusCode}');
+      return false;
+    }
+  } catch (e) {
+    print('Exception : $e');
+    return false;
+  }
+}
+
+Future<bool> deleteLieuLivraison(String id) async {
+  final token = await getAccessToken();
+  if (token == null) return false;
+
+  try {
+    final uri = Uri.parse('$baseUrl/api/lieux-livraison/$id/delete/');
+
+    final response = await http.delete(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      print('Erreur suppression lieu livraison : ${response.statusCode}');
+      return false;
+    }
+  } catch (e) {
+    print('Exception lors de la suppression : $e');
+    return false;
+  }
+}
+
+
+Future<bool> updateLieuLivraison(Map<String, dynamic> data,String id) async {
+  final token = await getAccessToken();
+  if (token == null) return false;
+
+  try {
+    final uri = Uri.parse('$baseUrl/api/lieux-livraison/$id/update/');
+
+    final response = await http.patch(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      print('Erreur mise à jour : ${response.statusCode}');
+      return false;
+    }
+  } catch (e) {
+    print('Exception lors de la mise à jour : $e');
+    return false;
+  }
+}
+
 }
 
 

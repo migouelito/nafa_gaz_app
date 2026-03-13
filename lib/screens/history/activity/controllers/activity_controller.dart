@@ -5,26 +5,31 @@ import 'package:flutter/widgets.dart';
 
 class ActivityController extends GetxController {
   final ApiService _apiService = ApiService();
-  
+
   var futureCommandes = Future<List<dynamic>?>.value([]).obs;
+
   @override
   void onInit() {
     super.onInit();
-    fetchOrders();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchOrders();
+    });
   }
 
-Future<void> fetchOrders() async {
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
+  Future<void> fetchOrders() async {
     try {
-      LoadingModal.show();
-      futureCommandes.value =  _apiService.fetchCommandes();
+      await Future.delayed(Duration.zero);
+      LoadingModal.show(); // safe maintenant
+
+      final commandes = await _apiService.fetchCommandes();
+      futureCommandes.value = Future.value(commandes);
+      print("===================== $commandes");
     } finally {
       LoadingModal.hide();
     }
-  });
-}
+  }
 
   Future<void> handleRefresh() async {
-    fetchOrders();
+    await fetchOrders();
   }
 }
