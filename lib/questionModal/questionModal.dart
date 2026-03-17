@@ -5,9 +5,9 @@ class DialogLogout {
   static Future<void> show({
     required String title,
     required String message,
-    IconData? icon,        // icône optionnelle
-    String? imagePath,     // chemin de l'image optionnelle
-    Color color = Colors.red, // couleur par défaut
+    IconData? icon,       
+    String? imagePath,     
+    Color color = Colors.red, 
     VoidCallback? onConfirm,
   }) async {
     final context = Get.context!;

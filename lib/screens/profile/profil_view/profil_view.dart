@@ -24,7 +24,7 @@ class ProfileView extends GetView<ProfileController> {
               fontWeight: FontWeight.w900,
               color: Colors.white,
               fontSize: 16,
-              letterSpacing: 1.5),
+              ),
         ),
         automaticallyImplyLeading: false,
         actions: [
@@ -215,7 +215,7 @@ class ProfileView extends GetView<ProfileController> {
       ),
       title: Text(title,
           style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF2D3436))),
+              fontSize: 14, color: Color(0xFF2D3436))),
       trailing:
           Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey.shade300),
       onTap: () => Get.toNamed(routeName),
@@ -235,7 +235,7 @@ class ProfileView extends GetView<ProfileController> {
       ),
       title: Text(title,
           style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF2D3436))),
+              fontSize: 14,  color: Color(0xFF2D3436))),
       trailing:
           Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey.shade300),
       onTap: () => Navigator.push(
@@ -251,12 +251,12 @@ class ProfileView extends GetView<ProfileController> {
         decoration: BoxDecoration(
             color: Colors.red.withOpacity(0.08),
             borderRadius: BorderRadius.circular(10)),
-        child: Icon(PhosphorIcons.power(PhosphorIconsStyle.bold),
+        child: Icon(PhosphorIcons.power(PhosphorIconsStyle.regular),
             color: Colors.red, size: 22),
       ),
       title: const Text("Déconnexion",
           style: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w700, color: Colors.red)),
+              fontSize: 14,  color: Colors.red)),
       onTap: () => controller.confirmLogout(),
     );
   }

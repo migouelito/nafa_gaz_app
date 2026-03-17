@@ -19,11 +19,10 @@ class ActivityController extends GetxController {
   Future<void> fetchOrders() async {
     try {
       await Future.delayed(Duration.zero);
-      LoadingModal.show(); // safe maintenant
+      LoadingModal.show(); 
 
       final commandes = await _apiService.fetchCommandes();
       futureCommandes.value = Future.value(commandes);
-      print("===================== $commandes");
     } finally {
       LoadingModal.hide();
     }

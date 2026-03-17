@@ -24,8 +24,8 @@ class ProduitDetailView extends GetView<ProduitDetailController> {
         )),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppColors.generalColor,
+        foregroundColor: Colors.white,
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.item.isEmpty) {
@@ -200,7 +200,7 @@ class ProduitDetailView extends GetView<ProduitDetailController> {
                 }),//_showAvarieOptions(),
       icon: Icon(PhosphorIcons.shoppingCart(PhosphorIconsStyle.bold), color: Colors.white, size: 20),
       label: const Text("Commander", 
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)),
+      style: TextStyle(color: Colors.white, fontSize: 15)),
     ),
   );
 

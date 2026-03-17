@@ -444,7 +444,7 @@ class ActivityScreen extends GetView<ActivityController> {
   Map<String, dynamic> _getStatusConfig(String etat) {
     switch (etat) {
       case "EN_ATTENTE":
-        return {'color': Colors.amber.shade700, 'icon': PhosphorIcons.clock(PhosphorIconsStyle.fill), 'label': "En attente"};
+        return {'color': Colors.amber.shade700, 'icon': PhosphorIcons.hourglass(PhosphorIconsStyle.fill), 'label': "En attente"};
       case "LIVRE":
         return {'color': Colors.green.shade600, 'icon': PhosphorIcons.checkCircle(PhosphorIconsStyle.fill), 'label': "Livré"};
       case "ANNULE":

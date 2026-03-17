@@ -33,23 +33,61 @@ class DashboardView extends GetView<DashboardController> {
             const SizedBox(height: 30),
             _buildServicesSection(context),
             const SizedBox(height: 30),
+            
+            // Slogan en bas
+            _buildSlogan(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  // --- APP BAR ÉPURÉE (Blanche, inchangée) ---
+  // --- APP BAR AVEC CAMION ET LOGO SPLITÉ ---
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      title: const Text(
-        "NAFAGAZ",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
+      title: Row(
+        children: [
+          // Icône de camion de transport de gaz
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.generalColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-          
+            child: Icon(
+              PhosphorIcons.truck(PhosphorIconsStyle.bold),
+              color: AppColors.generalColor,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 8),
+          // Texte NAFAGAZ splité
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "NAFA",
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: AppColors.generalColor,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                TextSpan(
+                  text: "GAZ",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       foregroundColor: const Color(0xFF1A1F36),
@@ -59,6 +97,33 @@ class DashboardView extends GetView<DashboardController> {
         _buildWalletAction(context),
         _buildNotificationAction(context),
       ],
+    );
+  }
+
+  // --- SLOGAN EN BAS ---
+  Widget _buildSlogan() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        children: [
+          Container(
+            height: 2,
+            width: 100,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.transparent,
+                  AppColors.generalColor.withOpacity(0.3),
+                  Colors.orange.withOpacity(0.3),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+       
+        ],
+      ),
     );
   }
 
@@ -173,13 +238,11 @@ class DashboardView extends GetView<DashboardController> {
             onPageChanged: (index) {
               controller.currentIndex.value = index % controller.promoImages.length;
             },
-            // Utilisation de la même plage infinie
             itemCount: DashboardController.infiniteRange, 
             itemBuilder: (context, index) {
               int realIndex = index % controller.promoImages.length;
               
               return Obx(() {
-                // Calcul du scale identique au style fluide de AccueilPage
                 double relativePosition = controller.currentPageValue.value - index;
                 double scale = (1 - (relativePosition.abs() * 0.15)).clamp(0.85, 1.0);
 
@@ -192,7 +255,6 @@ class DashboardView extends GetView<DashboardController> {
           ),
         ),
         const SizedBox(height: 12),
-        // Indicateurs mis à jour avec AppColors.generalColor
         Obx(() => Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
@@ -201,7 +263,7 @@ class DashboardView extends GetView<DashboardController> {
               duration: const Duration(milliseconds: 300),
               margin: const EdgeInsets.symmetric(horizontal: 3),
               height: 7,
-              width: controller.currentIndex.value == index ? 20 : 7, // Même style de points
+              width: controller.currentIndex.value == index ? 20 : 7,
               decoration: BoxDecoration(
                 color: controller.currentIndex.value == index
                     ? AppColors.generalColor 
@@ -214,6 +276,7 @@ class DashboardView extends GetView<DashboardController> {
       ],
     );
   }
+  
   Widget _buildAdImageBanner(String imagePath) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -262,10 +325,10 @@ class DashboardView extends GetView<DashboardController> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
+                child:const Text(
                   "Promo",
                   style: TextStyle(
-                    color: AppColors.generalColor, // Couleur principale ici
+                    color: AppColors.generalColor,
                     fontWeight: FontWeight.w800,
                     fontSize: 12,
                   ),
@@ -327,12 +390,12 @@ class DashboardView extends GetView<DashboardController> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF0F3F8),
+              color:  AppColors.generalColor.withOpacity(0.08),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon, 
-              color: AppColors.generalColor, // Icône aux couleurs de l'app
+              color: AppColors.generalColor, 
               size: 22,
             ),
           ),
@@ -343,7 +406,7 @@ class DashboardView extends GetView<DashboardController> {
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF4A5568),
+              color: AppColors.generalColor,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -353,7 +416,6 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 }
-
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:nafa_gaz_app/routes/app_routes.dart';
