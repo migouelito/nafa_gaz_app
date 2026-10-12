@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import '../../../../servicesApp/apiServices.dart';
-import '../../../../loading/loading.dart';
 import 'package:flutter/widgets.dart';
 
 class ActivityController extends GetxController {
@@ -18,13 +17,10 @@ class ActivityController extends GetxController {
 
   Future<void> fetchOrders() async {
     try {
-      await Future.delayed(Duration.zero);
-      LoadingModal.show(); 
 
       final commandes = await _apiService.fetchCommandes();
       futureCommandes.value = Future.value(commandes);
     } finally {
-      LoadingModal.hide();
     }
   }
 

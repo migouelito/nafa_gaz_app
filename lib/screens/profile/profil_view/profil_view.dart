@@ -109,6 +109,7 @@ class ProfileView extends GetView<ProfileController> {
   }
 
   // Header avec fond coloré et bord arrondi
+// Header avec fond coloré et icône d'utilisateur
   Widget _buildProfileHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(bottom: 30),
@@ -120,33 +121,19 @@ class ProfileView extends GetView<ProfileController> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Colors.grey.shade100,
-                    child: Text(
-                      controller.userName.isNotEmpty
-                          ? controller.userName.substring(0, 1).toUpperCase()
-                          : "U",
-                      style: TextStyle(
-                          fontSize: 32,
-                          color: AppColors.generalColor,
-                          fontWeight: FontWeight.w900),
-                    ),
-                  ),
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                  color: Colors.white, shape: BoxShape.circle),
+              child: CircleAvatar(
+                radius: 45,
+                backgroundColor: Colors.grey.shade100,
+                child: Icon(
+                  PhosphorIcons.user(PhosphorIconsStyle.bold), 
+                  size: 40,
+                  color: AppColors.generalColor,
                 ),
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: AppColors.Orange,
-                  child: const Icon(Icons.camera_alt, size: 14, color: Colors.white),
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: 15),
             Text(

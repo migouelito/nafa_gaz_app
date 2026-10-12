@@ -16,11 +16,11 @@ class ActivityDetailView extends GetView<ActivityDetailController> {
       backgroundColor: const Color(0xFFF4F7FA),
       appBar: AppBar(
         title: const Text("Détails de la Commande", 
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+          style: TextStyle(fontSize: 16)),
         centerTitle: true,
+        foregroundColor: Colors.white,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppColors.generalColor,
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.order.isEmpty) {

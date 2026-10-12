@@ -17,17 +17,17 @@ class ActivityScreen extends GetView<ActivityController> {
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F7FA),
         appBar: AppBar(
+          foregroundColor: Colors.white,
           title: const Text(
             "Mes Commandes",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
             ),
           ),
           elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
+               backgroundColor: AppColors.generalColor,
+
           automaticallyImplyLeading: false,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(60),

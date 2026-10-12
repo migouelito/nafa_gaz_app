@@ -1,80 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nafa_gaz_app/routes/app_routes.dart';
-import '../../../loading/loading.dart';
 import '../../../alerte/alerte.dart';
 import '../../../servicesApp/apiServices.dart';
-import '../../../main_layout.dart';
-import '../../../routes/app_routes.dart';
+
 class AuthController extends GetxController {
   final ApiService apiService = ApiService(); 
 
   final matriculeController = TextEditingController();
   final passwordController = TextEditingController();
+  
+  final phoneFocus = FocusNode();
+  final passwordFocus = FocusNode();
 
+  var isLoading = false.obs;
   var isPasswordHidden = true.obs;
+
+  var phoneError = RxnString();
+  var passwordError = RxnString();
+
+  @override
+  void onInit() {
+    super.onInit();
+    matriculeController.addListener(() {
+      if (phoneError.value != null) {
+        phoneError.value = null;
+      }
+    });
+    passwordController.addListener(() {
+      if (passwordError.value != null) {
+        passwordError.value = null;
+      }
+    });
+  }
 
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
   }
 
   bool validateFields() {
-    if (matriculeController.text.trim().isEmpty) {
-      Get.snackbar("Erreur", "Veuillez entrer votre matricule",
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
+    bool isValid = true;
+    String phone = matriculeController.text.trim();
+    String pass = passwordController.text.trim();
+
+    if (phone.isEmpty) {
+      phoneError.value = "Veuillez entrer votre numéro de téléphone";
+      isValid = false;
+    } else if (phone.length < 8) {
+      phoneError.value = "Le matricule doit contenir au moins 8 chiffres";
+      isValid = false;
     }
-    if (passwordController.text.trim().isEmpty) {
-      Get.snackbar("Erreur", "Veuillez entrer votre mot de passe",
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
+
+    if (pass.isEmpty) {
+      passwordError.value = "Veuillez entrer votre mot de passe";
+      isValid = false;
+    } else if (pass.length < 4) {
+      passwordError.value = "Le mot de passe doit faire au moins 4 caractères";
+      isValid = false;
     }
-    return true;
+
+    return isValid;
   }
 
- Future<void> login() async {
-  if (!validateFields()) return;
+  Future<void> login() async {
+    if (!validateFields()) return;
 
-  try {
-    LoadingModal.show();
+    try {
+      isLoading.value = true;
+      final dataconnexion = {
+        "phone": "+226${matriculeController.text.trim().toUpperCase()}",
+        "password": passwordController.text.trim(),
+      };
+      final result = await apiService.login(dataconnexion);
 
-    final dataconnexion = {
-      "phone": "+226${matriculeController.text.trim().toUpperCase()}",
-      "password": passwordController.text.trim(),
-    };
-    final result = await apiService.login(dataconnexion);
-      print(result);
-    print("Résultat login: $result");
-
-    if (result) {
-      // Succès : on ferme le loader et on change de page
-      LoadingModal.hide();
-    // Get.offAllNamed(Routes.HOME);
-          Get.offAllNamed(Routes.HOMEMAIN);
-
-    } else {
-      LoadingModal.hide(); 
+      if (result) {
+        isLoading.value = false;
+        Get.offAllNamed(Routes.HOMEMAIN);
+      } else {
+        isLoading.value = false;
+        Alerte.show(
+          title: "Erreur d'authentification",
+          message: "Matricule ou mot de passe incorrect",
+          imagePath: "assets/images/error.png",
+          color: Colors.red,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
       Alerte.show(
-        title: "Erreur d'authentification",
-        message: "Matricule ou mot de passe incorrect",
+        title: "Erreur de connexion",
+        message: "Problème de communication avec le serveur.",
         imagePath: "assets/images/error.png",
         color: Colors.red,
       );
     }
-  } catch (e) {
-    LoadingModal.hide();
-    Alerte.show(
-      title: "Erreur de connexion",
-      message: "Problème de communication avec le serveur.",
-      imagePath: "assets/images/error.png",
-      color: Colors.red,
-    );
   }
-}
+
   @override
   void onClose() {
     matriculeController.dispose();
     passwordController.dispose();
+    phoneFocus.dispose();
+    passwordFocus.dispose();
     super.onClose();
   }
 }

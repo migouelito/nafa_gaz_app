@@ -22,31 +22,33 @@ class LoginView extends GetView<AuthController> {
               child: IntrinsicHeight(
                 child: Column(
                   children: [
-                    // --- HEADER IMAGE AVEC DÉGRADÉ ---
                     _buildHeaderImage(context),
-
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                       child: Column(
                         children: [
-                          const SizedBox(height: 10),
-                          
-                          // --- TEXTES ORIGINAUX ---
                           Text(
-                            "Bienvenue sur NAFAGAZ",
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.generalColor),
+                            "Connexion                         ",
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.generalColor),
                           ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            "Commande de bouteilles simple, rapide et sûre ",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 13, color: Colors.blueGrey),
-                          ),
-                          const SizedBox(height: 30),
-                          // --- FORMULAIRE AVEC VOS MÉTHODES ---
-                          _buildModernField(child: _buildPhoneField()),
+                          const SizedBox(height: 20),
+                      
+
+                          // CHAMP TÉLÉPHONE
+                          Obx(() => _buildFieldWrapper(
+                            errorText: controller.phoneError.value,
+                            focusNode: controller.phoneFocus,
+                            child: _buildPhoneField(),
+                          )),
+
                           const SizedBox(height: 15),
-                          _buildModernField(child: _buildPasswordField()),
+
+                          // CHAMP MOT DE PASSE
+                          Obx(() => _buildFieldWrapper(
+                            errorText: controller.passwordError.value,
+                            focusNode: controller.passwordFocus,
+                            child: _buildPasswordField(),
+                          )),
 
                           Align(
                             alignment: Alignment.centerRight,
@@ -58,22 +60,16 @@ class LoginView extends GetView<AuthController> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 10),
 
-                          // --- BOUTON DE CONNEXION ---
                           _buildSubmitButton(),
 
                           const SizedBox(height: 30),
-
                           _buildRegisterLink(),
                         ],
                       ),
                     ),
-
-                    // --- FOOTER POUSSÉ VERS LE BAS ---
                     const Spacer(),
-                    
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: _buildAppSource("By Elite IT Partners"),
@@ -88,66 +84,69 @@ class LoginView extends GetView<AuthController> {
     );
   }
 
-  // --- COMPOSANTS AVEC VOS STYLES ORIGINAUX ---
-
-  Widget _buildHeaderImage(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.35,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/pub2.jpg"), 
-          fit: BoxFit.cover,
+  Widget _buildFieldWrapper({required Widget child, required FocusNode focusNode, String? errorText}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListenableBuilder(
+          listenable: focusNode,
+          builder: (context, _) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2))],
+              ),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  inputDecorationTheme: InputDecorationTheme(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: errorText != null ? Colors.red : AppColors.generalColor, width: 1.5),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: errorText != null ? Colors.red : AppColors.generalColor.withOpacity(0.5), width: 1),
+                    ),
+                  ),
+                ),
+                child: child,
+              ),
+            );
+          },
         ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.white.withOpacity(0.1),
-              Colors.white,
-            ],
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5, top: 5),
+            child: Text(errorText, style: const TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.w600)),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildModernField({required Widget child}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: child,
+      ],
     );
   }
 
   Widget _buildPhoneField() {
     return TextField(
       controller: controller.matriculeController,
+      focusNode: controller.phoneFocus,
+      onChanged: (value) => controller.phoneError.value = null, // EFFACE L'ERREUR ICI
       keyboardType: TextInputType.phone,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: _inputDecoration(label: "Téléphone", hint: "Numéro de téléphone",
-       icon: Icons.phone_android),
+      decoration: _inputDecoration(label: "Téléphone", hint: "Numéro de téléphone", icon: Icons.phone_android),
     );
-
   }
 
   Widget _buildPasswordField() {
     return Obx(() => TextField(
       controller: controller.passwordController,
+      focusNode: controller.passwordFocus,
+      onChanged: (value) => controller.passwordError.value = null, // EFFACE L'ERREUR ICI
       obscureText: controller.isPasswordHidden.value,
       decoration: _inputDecoration(
         label: "Mot de passe",
         hint: "••••••••",
         icon: Icons.lock_outline_rounded,
         suffix: IconButton(
-          icon: Icon(controller.isPasswordHidden.value ? Icons.visibility_off : Icons.visibility, size: 20),
+          icon: Icon(controller.isPasswordHidden.value ? Icons.visibility_off : Icons.visibility,color: AppColors.generalColor, size: 20),
           onPressed: controller.togglePasswordVisibility,
         ),
       ),
@@ -155,36 +154,40 @@ class LoginView extends GetView<AuthController> {
   }
 
   Widget _buildSubmitButton() {
-    return Container(
+    return Obx(() => Container(
       width: double.infinity, height: 55,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: AppColors.generalColor.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: ElevatedButton(
-        onPressed: controller.login,
+        onPressed: controller.isLoading.value ? null : controller.login,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.generalColor, foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 0,
         ),
-        child: const Text("Se connecter", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        child: controller.isLoading.value 
+          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+          : const Text("Se connecter", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
+    ));
+  }
+
+  Widget _buildHeaderImage(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.35,
+      decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/pub2.jpg"), fit: BoxFit.cover)),
+      // child: Container(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, Colors.white.withOpacity(0.1), Colors.white]))),
     );
   }
 
   Widget _buildRegisterLink() {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        const Text("Pas de compte ?", style: TextStyle(color: Colors.grey, fontSize: 13)),
-        TextButton(
-          onPressed: () => Get.toNamed(Routes.SIGNINUP),
-          child: Text("S'inscrire", style: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w900, fontSize: 13)),
-        ),
-      ],
-    );
+    return Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, children: [
+      const Text("Pas de compte ?", style: TextStyle(color: Colors.grey, fontSize: 13)),
+      TextButton(onPressed: () => Get.toNamed(Routes.SIGNINUP), child: Text("S'inscrire", style: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w900, fontSize: 13))),
+    ]);
   }
 
   Widget _buildAppSource(String appSource) {
@@ -198,8 +201,7 @@ class LoginView extends GetView<AuthController> {
       hintStyle: const TextStyle(color:Colors.grey, fontWeight: FontWeight.bold, fontSize: 10,),
       prefixIcon: Icon(icon, color: AppColors.generalColor, size: 20),
       suffixIcon: suffix,
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.generalColor.withOpacity(0.5), width: 1)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.generalColor, width: 1.5)),
+      border: InputBorder.none,
       labelStyle: TextStyle(color: Colors.grey[700], fontSize: 13, fontWeight: FontWeight.w600),
       floatingLabelStyle: TextStyle(color: AppColors.generalColor, fontWeight: FontWeight.w700, fontSize: 13),
     );
